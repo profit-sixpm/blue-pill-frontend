@@ -1,5 +1,8 @@
 import { useState } from "react";
+import { useNavigate, useLocation } from "react-router";
 import { Layout } from "@/shared/ui/layout";
+import { usePointStore } from "@/shared/store";
+import { toast } from "sonner";
 
 interface FormData {
   age: string;
@@ -111,18 +114,25 @@ function SelectInput({
 }
 
 export function UserInitPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const subtractPoint = usePointStore((state) => state.subtractPoint);
+
+  // 어디서 왔는지 확인 (blue-detail에서 왔으면 돌아갈 때 리포트 열기)
+  const fromPath = (location.state as { from?: string })?.from;
+
   const [formData, setFormData] = useState<FormData>({
-    age: "",
-    region: "",
-    residencePeriod: "",
-    householdMembers: "",
-    minorChildren: "",
-    monthlyIncome: "",
-    totalAssets: "",
-    carValue: "",
-    hasSubscriptionAccount: null,
-    depositCount: "",
-    additionalQualification: "",
+    age: "29",
+    region: "서울",
+    residencePeriod: "5년 이상",
+    householdMembers: "3",
+    minorChildren: "1",
+    monthlyIncome: "450",
+    totalAssets: "35000",
+    carValue: "1800",
+    hasSubscriptionAccount: true,
+    depositCount: "36",
+    additionalQualification: "newlywed",
   });
 
   const updateField = <K extends keyof FormData>(
@@ -134,6 +144,17 @@ export function UserInitPage() {
 
   const handleSubmit = () => {
     console.log("제출 데이터:", formData);
+
+    // 포인트 차감 & 토스트
+    subtractPoint(2);
+    toast.success("포인트가 차감되었습니다");
+
+    // blue-detail에서 왔으면 리포트 열기 state와 함께 돌아가기
+    if (fromPath) {
+      navigate(fromPath, { state: { showReport: true } });
+    } else {
+      navigate("/");
+    }
   };
 
   const qualificationOptions = [

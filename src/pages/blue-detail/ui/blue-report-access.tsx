@@ -1,17 +1,11 @@
 import Chart from "@/assets/chart.svg?react";
-import { usePointStore } from "@/shared/store";
 import { useAuthStore } from "@/entities/auth";
-import { useNavigate } from "react-router";
-import { toast } from "sonner";
+import { useNavigate, useLocation } from "react-router";
 
-interface BlueReportAccessProps {
-  onAccessReport: () => void;
-}
-
-export function BlueReportAccess({ onAccessReport }: BlueReportAccessProps) {
-  const subtractPoint = usePointStore((state) => state.subtractPoint);
+export function BlueReportAccess() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleClick = () => {
     if (!isAuthenticated) {
@@ -19,9 +13,8 @@ export function BlueReportAccess({ onAccessReport }: BlueReportAccessProps) {
       return;
     }
 
-    subtractPoint(2);
-    toast.success("포인트가 차감되었습니다");
-    onAccessReport();
+    // user-init 페이지로 이동하면서 현재 경로 전달
+    navigate("/user-init", { state: { from: location.pathname } });
   };
 
   return (
