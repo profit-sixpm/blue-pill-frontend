@@ -2,6 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useCallback } from "react";
 import { announcementsQueries } from "@/entities/announcements";
 import { BlueCard } from "./blue-card";
+import { useNavigate } from "react-router";
 
 export function BlueList() {
   const {
@@ -15,6 +16,11 @@ export function BlueList() {
 
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  const navigate = useNavigate();
+
+  const handleDetail = (id: number) => {
+    navigate(`/blue-detail?id=${id}`);
+  };
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -63,11 +69,16 @@ export function BlueList() {
     <div className="w-full">
       <div className="grid grid-cols-4 gap-5">
         {allAnnouncements.map((announcement) => (
-          <BlueCard key={announcement.id} announcement={announcement} />
+          <BlueCard
+            key={announcement.id}
+            announcement={announcement}
+            onClick={() => {
+              handleDetail(announcement.id);
+            }}
+          />
         ))}
       </div>
 
-      {/* 인피니티 스크롤 트리거 */}
       <div ref={loadMoreRef} className="h-10 mt-4">
         {isFetchingNextPage && (
           <div className="text-center py-4">더 불러오는 중...</div>
