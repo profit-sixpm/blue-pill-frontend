@@ -1,26 +1,9 @@
 import { http, HttpResponse, type HttpHandler } from "msw";
 import { prependApiUrl } from "@/shared/lib";
-import {
-  announcementsApiEndPoint,
-  announcementsListMockData,
-  announcementDetailMockData,
-} from "../config";
+import { announcementsApiEndPoint } from "../config";
 
-export const announcementsHandlers: HttpHandler[] = [
-  // 리스트 조회
-  http.get(prependApiUrl(announcementsApiEndPoint.getAnnouncements()), () => {
-    return HttpResponse.json(announcementsListMockData);
-  }),
-  // 상세 조회
-  http.get(
-    prependApiUrl(
-      announcementsApiEndPoint.getAnnouncementsDetail({ id: ":id" })
-    ),
-    () => {
-      return HttpResponse.json(announcementDetailMockData);
-    }
-  ),
-];
+// 실제 API 사용 - MSW 핸들러 비활성화
+export const announcementsHandlers: HttpHandler[] = [];
 
 export const announcementsError404Handler: HttpHandler = http.get(
   prependApiUrl(announcementsApiEndPoint.getAnnouncements()),

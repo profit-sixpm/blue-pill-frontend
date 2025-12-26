@@ -2,17 +2,37 @@ interface BlueTitleProps {
   region?: string;
   title?: string;
   statusLabel?: string;
-  applicationPeriod?: string;
+  receptionStartDate?: string;
+  receptionEndDate?: string;
   announcementDate?: string;
 }
+
+// 날짜 포맷 변환 (20251219 -> 25.12.19.)
+const formatDate = (dateStr?: string) => {
+  if (!dateStr || dateStr.length !== 8) return dateStr || "";
+  const yy = dateStr.slice(2, 4);
+  const mm = dateStr.slice(4, 6);
+  const dd = dateStr.slice(6, 8);
+  return `${yy}.${mm}.${dd}.`;
+};
 
 export function BlueTitle({
   region = "서울",
   title = "제49차 장기전세주택 입주자 모집 공고",
   statusLabel = "접수 중",
-  applicationPeriod = "25.12.25. ~ 25.12.29.",
-  announcementDate = "25.11.20.",
+  receptionStartDate,
+  receptionEndDate,
+  announcementDate,
 }: BlueTitleProps) {
+  const applicationPeriod =
+    receptionStartDate && receptionEndDate
+      ? `${formatDate(receptionStartDate)} ~ ${formatDate(receptionEndDate)}`
+      : "25.12.25. ~ 25.12.29.";
+
+  const formattedAnnouncementDate = announcementDate
+    ? formatDate(announcementDate)
+    : "25.11.20.";
+
   return (
     <div className="w-full flex flex-col">
       <div className="text-[20px] font-semibold text-[#777777]">{region}</div>
@@ -32,7 +52,7 @@ export function BlueTitle({
         </div>
         <div>
           <span className="mr-2">공고일</span>
-          <span className="font-medium">{announcementDate}</span>
+          <span className="font-medium">{formattedAnnouncementDate}</span>
         </div>
       </div>
     </div>
