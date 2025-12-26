@@ -3,7 +3,8 @@
   margin-left: 108px;
   padding: 24px;
   width: calc(100vw - 108px);
-  overflow-y: hidden;
+  min-height: 100vh;
+  overflow-x: hidden;
   display: flex;
   justify-content: center;
 }

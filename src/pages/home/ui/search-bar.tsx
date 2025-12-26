@@ -13,18 +13,18 @@ export function SearchBar({
   onChange,
 }: SearchBarProps) {
   return (
-    <div className="relative w-full">
+    <div className="group relative w-full">
       <Input
         type="search"
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
-        className="pl-11"
+        className="pl-11 border-[#C9C9CB] focus:border-[#5978FF] pr-[70px]"
       />
       <Search
         width={24}
         height={24}
-        className="pointer-events-none absolute right-[24px] top-1/2 -translate-y-1/2 text-gray-400"
+        className="pointer-events-none absolute right-[24px] top-1/2 -translate-y-1/2 text-[#C9C9CB] group-focus-within:text-[#5978FF]"
       />
     </div>
   );

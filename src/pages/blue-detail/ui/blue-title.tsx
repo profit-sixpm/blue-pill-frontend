@@ -14,39 +14,27 @@ export function BlueTitle({
   announcementDate = "25.11.20.",
 }: BlueTitleProps) {
   return (
-    <div className="flex items-start justify-between w-full">
-      {/* 좌측 텍스트 영역 */}
-      <div className="flex flex-col gap-4">
-        {/* 지역 */}
-        <div className="text-base font-semibold text-gray-500">{region}</div>
-
-        {/* 제목 */}
-        <h1 className="text-3xl font-extrabold leading-tight text-gray-900">
+    <div className="w-full flex flex-col">
+      <div className="text-[20px] font-semibold text-[#777777]">{region}</div>
+      <div className="mt-[8px] mb-[20px] flex items-start justify-between gap-6">
+        <h1 className="text-[40px] font-bold leading-tight text-[#3A3B40]">
           {title}
         </h1>
 
-        {/* 날짜 정보 */}
-        <div className="flex flex-col gap-2 text-base text-gray-500">
-          <div>
-            <span className="mr-2">접수일</span>
-            <span className="font-medium text-gray-700">
-              {applicationPeriod}
-            </span>
-          </div>
-          <div>
-            <span className="mr-2">공고일</span>
-            <span className="font-medium text-gray-700">
-              {announcementDate}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* 우측 상태 뱃지 */}
-      <div className="shrink-0">
-        <span className="inline-flex items-center justify-center rounded-full bg-[#FFF872] px-5 py-2 text-base font-semibold text-[#2D5BFF]">
+        <span className="shrink-0 inline-flex items-center justify-center rounded-full bg-[#FFF872] px-5 py-2 text-base font-semibold text-[#2D5BFF]">
           {statusLabel}
         </span>
+      </div>
+
+      <div className="flex flex-col gap-[12px] text-[20px] text-[#7F848D]">
+        <div>
+          <span className="mr-2">접수일</span>
+          <span className="font-medium">{applicationPeriod}</span>
+        </div>
+        <div>
+          <span className="mr-2">공고일</span>
+          <span className="font-medium">{announcementDate}</span>
+        </div>
       </div>
     </div>
   );

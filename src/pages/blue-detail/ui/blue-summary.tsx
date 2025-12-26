@@ -17,9 +17,9 @@ function SummaryCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-[#EEF0FF] bg-white p-6 shadow-[0px_4px_16px_0px_#1b1b1b0f]">
-      <div className="text-lg font-bold text-gray-900">{title}</div>
-      <div className="mt-3 text-base text-gray-600">{children}</div>
+    <div className="rounded-[12px] border border-[#F0F0FE] bg-white p-6">
+      <div className="text-[24px] font-bold text-[#595E69]">{title}</div>
+      <div className="mt-[20px] text-[20px] text-[#84888E]">{children}</div>
     </div>
   );
 }
@@ -36,16 +36,13 @@ export function BlueSummary({
 }: BlueSummaryProps) {
   return (
     <section className="w-full">
-      <h2 className="text-2xl font-extrabold text-gray-900">전체 공고 요약</h2>
-
-      <div className="mt-6 flex flex-col gap-4">
-        {/* 1행: 2열 */}
+      <h2 className="text-[28px] font-bold text-[#3A3B40]">전체 공고 요약</h2>
+      <div className="mt-[20px] flex flex-col gap-4">
         <div className="grid grid-cols-2 gap-4">
           <SummaryCard title="공급 대상">{target}</SummaryCard>
           <SummaryCard title="공급 지역">{region}</SummaryCard>
         </div>
 
-        {/* 2행: 2열 */}
         <div className="grid grid-cols-2 gap-4">
           <SummaryCard title="모집 단지">{complexName}</SummaryCard>
 

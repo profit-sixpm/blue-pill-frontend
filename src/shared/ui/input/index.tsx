@@ -7,18 +7,15 @@ export interface InputProps
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, ...props }, ref) => {
     return (
-      <div className="w-full justify-between items-center">
-        <input
-          type={type}
-          className={cn(
-            (className =
-              "w-full shadow-[0px_0px_12px_0px_#1b1b1b14] border border-[#c9c9cb] rounded-[32px] py-4 px-6 flex items-center justify-around outline-none"),
-            className
-          )}
-          ref={ref}
-          {...props}
-        />
-      </div>
+      <input
+        type={type}
+        className={cn(
+          "w-full shadow-[0px_0px_12px_0px_#1b1b1b14] border border-[#C9C9CB] rounded-[32px] py-4 px-6 outline-none focus:border-[#5978FF] transition-colors",
+          className
+        )}
+        ref={ref}
+        {...props}
+      />
     );
   }
 );
