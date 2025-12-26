@@ -15,6 +15,8 @@ export function BlueDetailPage() {
     enabled: id > 0,
   });
 
+  console.log("API 응답:", { id, announcement, isLoading });
+
   if (isLoading) {
     return (
       <Layout>
