@@ -136,7 +136,7 @@ export function UserInitPage() {
 
   const [formData, setFormData] = useState<FormData>({
     age: "29",
-    region: "서울특별시",
+    region: "인천광역시",
     residencePeriod: "5",
     householdMembers: "3",
     minorChildren: "1",
