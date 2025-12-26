@@ -70,7 +70,7 @@ export function BlueCard({ announcement, onClick }: BlueCardProps) {
           </div>
 
           <div className="flex items-center gap-2">
-            <Chart fill="#A3B4FF" />
+            <Chart color="#A3B4FF" />
 
             <span className="rounded-[6px] text-[#A3B4FF] py-1 text-base font-normal leading-none text-right">
               {randomCount}건

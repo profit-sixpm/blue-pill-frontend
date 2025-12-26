@@ -9,12 +9,20 @@
   position: fixed;
   left: 0;
   padding: 16px;
+  &__alarm {
+    position: absolute;
+    top: 48px;
+    left: 120px;
+    z-index: 1000;
+  }
+
   &__top {
     display: flex;
     flex-direction: column;
     gap: 64px;
     &__menu {
       display: flex;
+      position: relative;
       flex-direction: column;
       gap: 36px;
       align-items: center;
