@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useSearchParams } from "react-router";
 import { BlueReportAccess } from "./blue-report-access";
 import { BlueReportEligible } from "./blue-report-eligible";
 import { BlueReportIneligible } from "./blue-report-ineligible";
@@ -15,14 +15,21 @@ function LoadingSpinner() {
 
 export function BlueReport() {
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const showReportFromState = (location.state as { showReport?: boolean })
     ?.showReport;
 
   const [isLoading, setIsLoading] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
 
-  // 랜덤으로 적격/부적격 결정 (나중에 API 연결 시 변경)
-  const [isEligible] = useState(() => Math.random() > 0.5);
+  // id 쿼리파라미터로 적격/부적격 결정
+  // id=429 → 적격, id=430 → 부적격, 그 외 → 랜덤
+  const id = searchParams.get("id");
+  const [isEligible] = useState(() => {
+    if (id === "429") return true;
+    if (id === "430") return false;
+    return Math.random() > 0.5;
+  });
 
   // user-init에서 돌아왔을 때 로딩 후 리포트 열기
   useEffect(() => {
