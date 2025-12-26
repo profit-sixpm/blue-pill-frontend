@@ -9,11 +9,13 @@
   position: fixed;
   left: 0;
   padding: 16px;
+  z-index: 9999;
+  background-color: white;
   &__alarm {
-    position: absolute;
-    top: 48px;
+    position: fixed;
+    top: 100px;
     left: 120px;
-    z-index: 1000;
+    z-index: 9999;
   }
 
   &__top {
