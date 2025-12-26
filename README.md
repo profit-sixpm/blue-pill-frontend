@@ -62,7 +62,7 @@ src/
 │
 ├── pages/                # 페이지 UI 컴포넌트
 │   └── [page-name]/
-│       └── ui/           # UI 컴포넌트만
+│       └── ui/           # UI 컴포넌트
 │
 ├── features/             # pages 간 공유 UI (선택적 사용)
 │   └── [feature-name]/
