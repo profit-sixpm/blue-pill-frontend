@@ -49,7 +49,7 @@ const MOCK_ALARMS: AlarmItem[] = [
 
 export function Alarm() {
   return (
-    <div className="w-[360px] rounded-[16px] border border-[#4C6FFF] bg-white shadow-[0px_0px_12px_0px_#1B1B1B14] overflow-hidden">
+    <div className="w-[360px] z-50 rounded-[16px] border border-[#4C6FFF] bg-white shadow-[0px_0px_12px_0px_#1B1B1B14] overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4">
         <div className="text-[14px] font-semibold text-[#7F848D]">알림</div>
