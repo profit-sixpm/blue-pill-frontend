@@ -1,10 +1,9 @@
 const VERSION_PREFIX = {
-  home: "/home",
+  home: "/health",
 };
 
 export const homeApiEndPoint = {
   getHome: () => `${VERSION_PREFIX.home}`,
-  getHomeDetail: ({ id }: { id: string }) =>
-    `${VERSION_PREFIX.home}/${id}/detail`,
-  deleteHome: ({ id }: { id: string }) => `${VERSION_PREFIX.home}/${id}`,
+  getHomeDetail: ({ id }: { id: string }) => `${VERSION_PREFIX.home}`,
+  deleteHome: ({ id }: { id: string }) => `${VERSION_PREFIX.home}`,
 };

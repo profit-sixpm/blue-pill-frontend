@@ -17,6 +17,6 @@ export const getHomeDetail = async ({ id }: { id: string }) => {
 };
 
 export const deleteHome = async ({ id }: { id: string }) => {
-  const response = await publicApi.delete(homeApiEndPoint.deleteHome({ id }));
+  const response = await publicApi.get(homeApiEndPoint.deleteHome({ id }));
   return response.data;
 };

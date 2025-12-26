@@ -1,6 +1,7 @@
-import { Button } from "@/shared/ui/button";
 import { useBearStore } from "@/shared/store";
-import { HomeUser } from "./home-user";
+import { Layout } from "@/shared/ui/layout";
+import { SearchBar } from "./search-bar";
+import { BlueList } from "./blue-list";
 
 export const HomePage = () => {
   const bears = useBearStore((s) => s.bears);
@@ -8,17 +9,11 @@ export const HomePage = () => {
   const removeAllBears = useBearStore((s) => s.removeAllBears);
 
   return (
-    <div className="flex flex-col gap-4 p-4">
-      <HomeUser />
-      <p className="text-lg font-medium">Bears: {bears}</p>
-      <div className="flex gap-2">
-        <Button onClick={increasePopulation} variant="default">
-          increase
-        </Button>
-        <Button onClick={removeAllBears} variant="destructive">
-          removeAllBears
-        </Button>
+    <Layout>
+      <div className="w-[1180px] flex flex-col items-center gap-[48px]">
+        <SearchBar placeholder="궁금한 청약 공고를 검색하세요." />
+        <BlueList />
       </div>
-    </div>
+    </Layout>
   );
 };
