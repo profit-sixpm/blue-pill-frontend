@@ -1,11 +1,13 @@
 import Chart from "@/assets/chart.svg?react";
 import { useAuthStore } from "@/entities/auth";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate, useLocation, useSearchParams } from "react-router";
 
 export function BlueReportAccess() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const announcementId = searchParams.get("id") || "";
 
   const handleClick = () => {
     if (!isAuthenticated) {
@@ -13,8 +15,10 @@ export function BlueReportAccess() {
       return;
     }
 
-    // user-init 페이지로 이동하면서 현재 경로 전달
-    navigate("/user-init", { state: { from: location.pathname } });
+    // user-init 페이지로 이동하면서 현재 경로와 announcementId 전달
+    navigate(`/user-init?announcementId=${announcementId}`, {
+      state: { from: `${location.pathname}${location.search}` },
+    });
   };
 
   return (

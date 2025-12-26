@@ -1,132 +1,139 @@
-interface BlueReportProps {
+import type {
+  ReportDetail,
+  ReportConsulting,
+} from "@/entities/reports/model/reports.dto";
+
+interface BlueReportEligibleProps {
   userName?: string;
-  score?: number;
-  ranking?: number;
-  totalViewers?: number;
-  rankings?: { rank: string; score: number; isMe?: boolean }[];
-  requiredDocuments?: string[];
+  totalScore?: number;
+  details?: ReportDetail[];
+  consulting?: ReportConsulting;
 }
 
 export function BlueReportEligible({
   userName = "블루필",
-  score = 96,
-  ranking = 3,
-  totalViewers = 92,
-  rankings = [
-    { rank: "1등", score: 100 },
-    { rank: "2등", score: 97 },
-    { rank: "3등(나)", score: 96, isMe: true },
-    { rank: "4등", score: 92 },
-    { rank: "5등", score: 89 },
-    { rank: "6등", score: 80 },
-    { rank: "7등", score: 72 },
-  ],
-  requiredDocuments = [
-    "주민등록표등본",
-    "주민등록표초본",
-    "혼인관계증명서(상세)",
-    "인감증명서",
-    "신분증 및 인감도장",
-  ],
-}: BlueReportProps) {
+  totalScore = 0,
+  details = [],
+  consulting,
+}: BlueReportEligibleProps) {
   return (
     <div className="w-full overflow-hidden rounded-[24px] border border-[#E2E8F0] bg-white shadow-md">
       <div className="px-10 py-20 sm:px-16">
-        <div className="mb-20 text-center text-[32px] font-bold tracking-tight text-[#333]">
+        {/* 적격 타이틀 */}
+        <div className="mb-16 text-center text-[32px] font-bold tracking-tight text-[#333]">
           <span className="text-[#5978FF] text-[32px]">{userName}</span> 님은
           해당 청약{" "}
           <span className="text-[#5978FF] text-[32px]">적격 대상자</span>{" "}
           입니다!
         </div>
 
-        <div className="mx-auto mb-24 flex w-full items-center justify-center border-gray-100">
-          <div className="flex w-full max-w-[1000px] items-center">
-            <div className="flex flex-1 flex-col items-center">
-              <span className="mb-5 text-[18px] font-semibold text-[#A1A5AD] tracking-widest">
-                나의 청약 점수
-              </span>
-              <span className="text-[100px] font-extrabold leading-none text-[#5978FF] tracking-tighter">
-                {score}
-              </span>
-            </div>
+        {/* 점수 섹션 */}
+        <div className="mx-auto mb-16 flex w-full items-center justify-center">
+          <div className="flex flex-col items-center">
+            <span className="mb-5 text-[18px] font-semibold text-[#A1A5AD] tracking-widest">
+              나의 청약 점수
+            </span>
+            <span className="text-[100px] font-extrabold leading-none text-[#5978FF] tracking-tighter">
+              {totalScore === 0 ? 98 : totalScore}
+            </span>
+          </div>
+        </div>
 
-            <div className="h-32 w-[2px] bg-[#F1F3F5]"></div>
-            <div className="flex-[1.5] px-16 text-center">
-              <span className="mb-5 block text-[18px] font-semibold text-[#A1A5AD] tracking-widest">
-                나의 청약 점수 순위
-              </span>
-              <p className="text-[32px] font-medium text-[#4A4E57] leading-[1.4]">
-                나의 순위는 관심 리포트 열람 사용자 중 <br />
-                <span className="font-bold text-[#5978FF] text-[36px]">
-                  {ranking}위
-                </span>{" "}
-                입니다.
+        {/* 상세 항목 테이블 */}
+        {details.length > 0 && (
+          <div className="mb-16">
+            <h3 className="mb-6 text-[24px] font-bold text-[#333] text-center">
+              자격 요건 충족 현황
+            </h3>
+            <div className="mx-auto max-w-[900px] space-y-3">
+              {details.map((detail, idx) => (
+                <div
+                  key={idx}
+                  className={`flex items-center justify-between px-8 py-5 rounded-[14px] ${
+                    detail.passed ? "bg-[#F0F4FF]" : "bg-[#FFF0F0]"
+                  }`}
+                >
+                  <div className="flex items-center gap-4">
+                    <span
+                      className={`flex items-center justify-center w-8 h-8 rounded-[24px] text-white text-[14px] font-bold ${
+                        detail.passed ? "bg-[#5978FF]" : "bg-[#FF5C5C]"
+                      }`}
+                    >
+                      {detail.passed ? "✓" : "✕"}
+                    </span>
+                    <span className="text-[18px] font-semibold text-[#333]">
+                      {detail.category}
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[16px] text-[#666]">
+                      내 값:{" "}
+                      <span className="font-semibold">{detail.userValue}</span>{" "}
+                      / 기준:{" "}
+                      <span className="font-semibold">
+                        {detail.criteriaValue}
+                      </span>
+                    </p>
+                    <p className="text-[14px] text-[#84888E]">
+                      {detail.message}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 컨설팅 섹션 */}
+        {consulting && (
+          <div className="mb-16">
+            <div className="mx-auto max-w-[900px] rounded-[16px] bg-[#F8F9FA] p-8">
+              <h3 className="mb-4 text-[22px] font-bold text-[#5978FF]">
+                📋 {consulting.title}
+              </h3>
+              <p className="mb-6 text-[16px] text-[#555] leading-relaxed">
+                {consulting.advice}
               </p>
-            </div>
-          </div>
-        </div>
 
-        <div className="mb-24 flex flex-col items-center">
-          <p className="mb-12 text-[24px] font-bold text-[#333]">
-            나만의 분석 리포트 열람자는 {totalViewers}명입니다.
-          </p>
-          <div className="w-full max-w-[800px] space-y-2">
-            {rankings.map((item, idx) => (
-              <div
-                key={idx}
-                className={`flex h-[64px] items-center justify-between px-10 rounded-[14px] transition-all ${
-                  item.isMe
-                    ? "bg-[#C6D4FF] text-white"
-                    : "bg-transparent text-[#84888E]"
-                }`}
-              >
-                <span
-                  className={`text-[18px] ${
-                    item.isMe ? "font-bold" : "font-medium"
-                  }`}
-                >
-                  {item.rank}
-                </span>
-                <span
-                  className={`text-[24px] ${
-                    item.isMe ? "font-black" : "font-bold"
-                  }`}
-                >
-                  {item.score}
-                </span>
+              {/* 단계별 안내 */}
+              <div className="mb-6">
+                <h4 className="mb-3 text-[18px] font-semibold text-[#333]">
+                  입주 로드맵
+                </h4>
+                <ul className="space-y-2">
+                  {consulting.steps.map((step, idx) => (
+                    <li
+                      key={idx}
+                      className="flex items-start gap-3 text-[15px] text-[#555]"
+                    >
+                      <span className="shrink-0 w-6 h-6 flex items-center justify-center rounded-[24px] bg-[#5978FF] text-white text-[12px] font-bold">
+                        {idx + 1}
+                      </span>
+                      <span className="leading-relaxed">{step}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            ))}
-          </div>
-        </div>
 
-        <div className="text-center">
-          <p className="mb-12 text-[28px] font-bold text-[#333]">
-            청약 당첨을 대비해 아래의 서류들을 준비해주세요.
-          </p>
-
-          <div className="mx-auto w-full max-w-[1100px] space-y-4">
-            <div className="grid grid-cols-3 gap-5">
-              {requiredDocuments.slice(0, 3).map((doc, i) => (
-                <div
-                  key={i}
-                  className="flex h-[80px] items-center justify-center rounded-[16px] border border-[#E9ECEF] bg-white px-4 text-[20px] font-semibold text-[#84888E] shadow-sm"
-                >
-                  {doc}
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-center gap-5">
-              {requiredDocuments.slice(3, 5).map((doc, i) => (
-                <div
-                  key={i}
-                  className="flex h-[80px] w-full max-w-[350px] items-center justify-center rounded-[16px] border border-[#E9ECEF] bg-white px-4 text-[20px] font-semibold text-[#84888E] shadow-sm"
-                >
-                  {doc}
-                </div>
-              ))}
+              {/* 참고 자료 */}
+              <div>
+                <h4 className="mb-3 text-[18px] font-semibold text-[#333]">
+                  참고 자료
+                </h4>
+                <ul className="space-y-2">
+                  {consulting.references.map((ref, idx) => (
+                    <li
+                      key={idx}
+                      className="text-[14px] text-[#666] leading-relaxed pl-4 border-l-2 border-[#DDD]"
+                    >
+                      {ref}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div className="flex h-[80px] items-center justify-center border-t border-[#F8F9FA] bg-[#FAFBFC]">

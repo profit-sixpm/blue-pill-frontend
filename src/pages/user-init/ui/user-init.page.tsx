@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate, useLocation, useSearchParams } from "react-router";
 import { Layout } from "@/shared/ui/layout";
 import { usePointStore } from "@/shared/store";
 import { toast } from "sonner";
+import { useCreateReport } from "@/entities/reports";
 
 interface FormData {
   age: string;
@@ -16,6 +17,13 @@ interface FormData {
   hasSubscriptionAccount: boolean | null;
   depositCount: string;
   additionalQualification: string;
+  // 추가 필드
+  isHomelessHouseholder: boolean;
+  isSingleParent: boolean;
+  isMarried: boolean;
+  isDisabled: boolean;
+  isSeverelyDisabled: boolean;
+  isPrioritySupply: boolean;
 }
 
 function FormInput({
@@ -121,10 +129,15 @@ export function UserInitPage() {
   // 어디서 왔는지 확인 (blue-detail에서 왔으면 돌아갈 때 리포트 열기)
   const fromPath = (location.state as { from?: string })?.from;
 
+  const [searchParams] = useSearchParams();
+  const announcementId = Number(searchParams.get("announcementId")) || 0;
+
+  const createReportMutation = useCreateReport();
+
   const [formData, setFormData] = useState<FormData>({
     age: "29",
     region: "서울",
-    residencePeriod: "5년 이상",
+    residencePeriod: "5",
     householdMembers: "3",
     minorChildren: "1",
     monthlyIncome: "450",
@@ -133,6 +146,13 @@ export function UserInitPage() {
     hasSubscriptionAccount: true,
     depositCount: "36",
     additionalQualification: "newlywed",
+    // 추가 필드 초기값
+    isHomelessHouseholder: false,
+    isSingleParent: false,
+    isMarried: false,
+    isDisabled: false,
+    isSeverelyDisabled: false,
+    isPrioritySupply: false,
   });
 
   const updateField = <K extends keyof FormData>(
@@ -142,18 +162,47 @@ export function UserInitPage() {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleSubmit = () => {
-    console.log("제출 데이터:", formData);
+  const handleSubmit = async () => {
+    // API 요청 데이터 변환
+    const requestData = {
+      announcementId,
+      age: Number(formData.age),
+      residenceArea: formData.region,
+      residencePeriod: Number(formData.residencePeriod),
+      householdMembers: Number(formData.householdMembers),
+      minorChildren: Number(formData.minorChildren),
+      monthlyIncome: Number(formData.monthlyIncome),
+      totalAssets: Number(formData.totalAssets),
+      carValue: Number(formData.carValue),
+      hasSavingsAccount: formData.hasSubscriptionAccount ?? false,
+      paymentCount: Number(formData.depositCount),
+      additionalQualifications: formData.additionalQualification,
+      isHomelessHouseholder: formData.isHomelessHouseholder,
+      isSingleParent: formData.isSingleParent,
+      isMarried: formData.isMarried,
+      isDisabled: formData.isDisabled,
+      isSeverelyDisabled: formData.isSeverelyDisabled,
+      isPrioritySupply: formData.isPrioritySupply,
+    };
 
-    // 포인트 차감 & 토스트
-    subtractPoint(2);
-    toast.success("포인트가 차감되었습니다");
+    try {
+      const result = await createReportMutation.mutateAsync(requestData);
 
-    // blue-detail에서 왔으면 리포트 열기 state와 함께 돌아가기
-    if (fromPath) {
-      navigate(fromPath, { state: { showReport: true } });
-    } else {
-      navigate("/");
+      // 포인트 차감 & 토스트
+      subtractPoint(2);
+      toast.success("포인트가 차감되었습니다");
+
+      // blue-detail에서 왔으면 리포트 열기 state와 함께 돌아가기
+      if (fromPath) {
+        navigate(fromPath, {
+          state: { showReport: true, reportResult: result },
+        });
+      } else {
+        navigate("/");
+      }
+    } catch (error) {
+      toast.error("리포트 생성에 실패했습니다");
+      console.error("리포트 생성 에러:", error);
     }
   };
 
@@ -272,9 +321,17 @@ export function UserInitPage() {
           <button
             type="button"
             onClick={handleSubmit}
-            className="mt-12 w-full h-[56px] rounded-[8px] bg-[#5978FF] text-white text-[18px] font-semibold hover:bg-[#4A67E8] transition-colors"
+            disabled={createReportMutation.isPending}
+            className="mt-12 w-full h-[56px] rounded-[8px] bg-[#5978FF] text-white text-[18px] font-semibold hover:bg-[#4A67E8] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            정보 입력하기
+            {createReportMutation.isPending ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-[24px] animate-spin" />
+                분석 중...
+              </span>
+            ) : (
+              "정보 입력하기"
+            )}
           </button>
         </div>
       </div>

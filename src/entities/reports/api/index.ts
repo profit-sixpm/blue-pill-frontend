@@ -1,1 +1,1 @@
-export { searchReports } from "./reports.api";
+export { searchReports, createReport } from "./reports.api";

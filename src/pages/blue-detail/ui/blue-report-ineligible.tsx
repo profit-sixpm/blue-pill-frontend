@@ -1,113 +1,215 @@
 import { useState } from "react";
-
-interface DisqualificationReason {
-  title: string;
-  description: string;
-  location?: string; // 예: "공고문 4페이지"
-}
+import type {
+  ReportDetail,
+  ReportConsulting,
+} from "@/entities/reports/model/reports.dto";
 
 interface BlueReportIneligibleProps {
   userName?: string;
-  reasons?: DisqualificationReason[];
+  totalScore?: number;
+  details?: ReportDetail[];
+  consulting?: ReportConsulting;
 }
 
-function ReasonItem({ reason }: { reason: DisqualificationReason }) {
+function DetailItem({ detail }: { detail: ReportDetail }) {
   const [isOpen, setIsOpen] = useState(true);
 
   return (
-    <div className="w-full flex flex-col items-center py-10 border-b border-[#F1F3F5] last:border-b-0">
-      {/* 사유 타이틀 및 보기 버튼 */}
-      <div className="w-full text-center px-6">
-        <p className="text-[28px] sm:text-[32px] font-medium text-[#4A4E57] leading-[1.5] mb-4">
-          {reason.title}
-        </p>
-
-        <button
-          type="button"
-          onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center justify-center gap-2 mx-auto text-[18px] font-semibold text-[#A1A5AD] hover:text-[#777]"
-        >
-          {isOpen ? "상세 내용 접기" : "공고문 상세 보기"}
-          <svg
-            width="14"
-            height="8"
-            viewBox="0 0 14 8"
-            fill="none"
-            className={`transition-transform duration-300 ${
-              isOpen ? "" : "rotate-180"
-            }`}
-          >
-            <path
-              d="M1 1L7 7L13 1"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-      </div>
-
-      {/* 상세 설명 (이미지 스타일의 회색 박스) */}
-      {isOpen && (
-        <div className="mt-8 w-full px-10">
-          <div className="rounded-[16px] bg-[#F4F6F8] p-10 text-left">
-            {reason.location && (
-              <span className="block mb-3 text-[18px] font-semibold text-[#84888E]">
-                {reason.location}
-              </span>
-            )}
-            <p className="text-[22px] sm:text-[26px] font-medium text-[#717680] leading-[1.6]">
-              {reason.description}
-            </p>
+    <div className="w-full flex flex-col items-center py-6 border-b border-[#F1F3F5] last:border-b-0">
+      <div className="w-full px-6">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-3">
+            <span
+              className={`flex items-center justify-center w-8 h-8 rounded-[24px] text-white text-[14px] font-bold ${
+                detail.passed ? "bg-[#5978FF]" : "bg-[#FF5C5C]"
+              }`}
+            >
+              {detail.passed ? "✓" : "✕"}
+            </span>
+            <span className="text-[20px] font-semibold text-[#333]">
+              {detail.category}
+            </span>
           </div>
+          <button
+            type="button"
+            onClick={() => setIsOpen(!isOpen)}
+            className="flex items-center gap-2 text-[16px] font-semibold text-[#A1A5AD] hover:text-[#777]"
+          >
+            {isOpen ? "접기" : "상세 보기"}
+            <svg
+              width="14"
+              height="8"
+              viewBox="0 0 14 8"
+              fill="none"
+              className={`transition-transform duration-300 ${
+                isOpen ? "" : "rotate-180"
+              }`}
+            >
+              <path
+                d="M1 1L7 7L13 1"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
         </div>
-      )}
+
+        {isOpen && (
+          <div className="mt-4 rounded-[12px] bg-[#FFF8F8] p-6">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[16px] text-[#666]">
+                내 값:{" "}
+                <span className="font-semibold text-[#FF5C5C]">
+                  {detail.userValue}
+                </span>
+              </span>
+              <span className="text-[16px] text-[#666]">
+                기준:{" "}
+                <span className="font-semibold">{detail.criteriaValue}</span>
+              </span>
+            </div>
+            <p className="text-[15px] text-[#555]">{detail.message}</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
 export function BlueReportIneligible({
   userName = "블루필",
-  reasons = [
-    {
-      title: `${userName}님의 차량 가액은 45,640,000원으로, 자동차 가액 기준(45,630,000원 이하)보다 10,000원 초과되었습니다.`,
-      location: "공고문 4페이지",
-      description:
-        "자동차 기준 세대 구성원 전원이 보유하고 있는 개별 자동차가액(4,563)만원 이하 * 총자산 기준과 자동차 기준 각각 충족하여야 함",
-    },
-    {
-      title: `${userName}님의 소득 기준이 도시근로자 월평균 소득의 100%를 초과하여 부적격 대상입니다.`,
-      location: "공고문 12페이지",
-      description:
-        "해당 공고의 3인 가구 기준 소득 제한은 월 5,729,686원 이하이나, 현재 신청자의 소득은 이를 초과하는 것으로 확인됩니다.",
-    },
-  ],
+  totalScore = 0,
+  details = [],
+  consulting,
 }: BlueReportIneligibleProps) {
+  // 부적격 항목만 필터링
+  const failedDetails = details.filter((d) => !d.passed);
+  const passedDetails = details.filter((d) => d.passed);
+
   return (
-    /* 전체 너비 100% 설정 */
     <div className="w-full overflow-hidden rounded-[24px] border border-[#E2E8F0] bg-white shadow-md">
-      <div className="py-20">
-        {/* 1. 상단 타이틀 (부적격 강조) */}
-        <div className="mb-20 text-center text-[30px] sm:text-[34px] font-bold tracking-tight text-[#333]">
+      <div className="py-20 px-10">
+        {/* 부적격 타이틀 */}
+        <div className="mb-16 text-center text-[30px] sm:text-[34px] font-bold tracking-tight text-[#333]">
           {userName} 님은 해당 청약{" "}
-          <span className="text-[#FF5C5C] text-[30px] sm:text-[34px] ">
+          <span className="text-[#FF5C5C] text-[30px] sm:text-[34px]">
             부적격 대상자
           </span>{" "}
           입니다!
         </div>
 
-        {/* 2. 사유 리스트 */}
-        <div className="flex flex-col w-full">
-          {reasons.map((reason, index) => (
-            <ReasonItem key={index} reason={reason} />
-          ))}
+        {/* 점수 섹션 */}
+        <div className="mx-auto mb-16 flex w-full items-center justify-center">
+          <div className="flex flex-col items-center">
+            <span className="mb-5 text-[18px] font-semibold text-[#A1A5AD] tracking-widest">
+              나의 청약 점수
+            </span>
+            <span className="text-[80px] font-extrabold leading-none text-[#FF5C5C] tracking-tighter">
+              {totalScore}
+            </span>
+          </div>
         </div>
+
+        {/* 부적격 사유 */}
+        {failedDetails.length > 0 && (
+          <div className="mb-12">
+            <h3 className="mb-6 text-[24px] font-bold text-[#FF5C5C] text-center">
+              부적격 사유
+            </h3>
+            <div className="mx-auto max-w-[900px] rounded-[16px] border border-[#FFE0E0] bg-white">
+              {failedDetails.map((detail, idx) => (
+                <DetailItem key={idx} detail={detail} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 충족 항목 */}
+        {passedDetails.length > 0 && (
+          <div className="mb-12">
+            <h3 className="mb-6 text-[24px] font-bold text-[#5978FF] text-center">
+              충족 항목
+            </h3>
+            <div className="mx-auto max-w-[900px] space-y-3">
+              {passedDetails.map((detail, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center justify-between px-8 py-4 rounded-[14px] bg-[#F0F4FF]"
+                >
+                  <div className="flex items-center gap-4">
+                    <span className="flex items-center justify-center w-8 h-8 rounded-[24px] bg-[#5978FF] text-white text-[14px] font-bold">
+                      ✓
+                    </span>
+                    <span className="text-[18px] font-semibold text-[#333]">
+                      {detail.category}
+                    </span>
+                  </div>
+                  <span className="text-[16px] text-[#666]">
+                    {detail.userValue} / {detail.criteriaValue}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 컨설팅 섹션 */}
+        {consulting && (
+          <div className="mb-8">
+            <div className="mx-auto max-w-[900px] rounded-[16px] bg-[#F8F9FA] p-8">
+              <h3 className="mb-4 text-[22px] font-bold text-[#FF5C5C]">
+                💡 {consulting.title}
+              </h3>
+              <p className="mb-6 text-[16px] text-[#555] leading-relaxed">
+                {consulting.advice}
+              </p>
+
+              {/* 개선 방안 */}
+              <div className="mb-6">
+                <h4 className="mb-3 text-[18px] font-semibold text-[#333]">
+                  개선 방안
+                </h4>
+                <ul className="space-y-2">
+                  {consulting.steps.map((step, idx) => (
+                    <li
+                      key={idx}
+                      className="flex items-start gap-3 text-[15px] text-[#555]"
+                    >
+                      <span className="shrink-0 w-6 h-6 flex items-center justify-center rounded-[24px] bg-[#FF5C5C] text-white text-[12px] font-bold">
+                        {idx + 1}
+                      </span>
+                      <span className="leading-relaxed">{step}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* 참고 자료 */}
+              <div>
+                <h4 className="mb-3 text-[18px] font-semibold text-[#333]">
+                  참고 자료
+                </h4>
+                <ul className="space-y-2">
+                  {consulting.references.map((ref, idx) => (
+                    <li
+                      key={idx}
+                      className="text-[14px] text-[#666] leading-relaxed pl-4 border-l-2 border-[#DDD]"
+                    >
+                      {ref}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* 3. 푸터 버튼 */}
+      {/* 푸터 버튼 */}
       <div className="flex h-[80px] items-center justify-center border-t border-[#F8F9FA] bg-[#FAFBFC]">
-        <button className="flex items-center gap-2 text-[18px] font-bold text-[#ADB5BD]">
+        <button className="flex items-center gap-2 text-[18px] font-bold text-[#ADB5BD] hover:text-[#5978FF] transition-colors">
           리포트 간단하게 보기
           <svg
             width="16"
