@@ -1,107 +1,154 @@
-interface BlueReportEligibleProps {
+interface BlueReportProps {
+  userName?: string;
   score?: number;
   ranking?: number;
-  totalApplicants?: number;
+  totalViewers?: number;
+  rankings?: { rank: string; score: number; isMe?: boolean }[];
   requiredDocuments?: string[];
 }
 
-function ScoreBar({ score }: { score: number }) {
-  return (
-    <div className="flex flex-col gap-2">
-      <div className="text-[16px] text-[#84888E]">점수</div>
-      <div className="relative h-[24px] w-full rounded-full bg-[#E8E8E8]">
-        <div
-          className="absolute left-0 top-0 h-full rounded-full bg-gradient-to-r from-[#5978FF] to-[#8B9FFF]"
-          style={{ width: `${score}%` }}
-        />
-        <div
-          className="absolute top-1/2 -translate-y-1/2 w-[40px] h-[40px] rounded-full bg-[#5978FF] border-4 border-white shadow-md flex items-center justify-center"
-          style={{ left: `calc(${score}% - 20px)` }}
-        >
-          <span className="text-[12px] font-bold text-white">{score}</span>
-        </div>
-      </div>
-      <div className="flex justify-between text-[14px] text-[#AAAFB5]">
-        <span>0</span>
-        <span>100</span>
-      </div>
-    </div>
-  );
-}
-
-function DocumentCheckList({ documents }: { documents: string[] }) {
-  return (
-    <div className="flex flex-col gap-3">
-      <div className="text-[20px] font-semibold text-[#595E69]">구비 서류</div>
-      <ul className="flex flex-col gap-2">
-        {documents.map((doc, index) => (
-          <li key={index} className="flex items-center gap-2 text-[16px] text-[#84888E]">
-            <span className="w-[20px] h-[20px] rounded-full bg-[#5978FF] flex items-center justify-center">
-              <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
-                <path
-                  d="M1 5L4.5 8.5L11 1"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </span>
-            {doc}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
 export function BlueReportEligible({
+  userName = "블루필",
   score = 96,
   ranking = 3,
-  totalApplicants = 150,
-  requiredDocuments = [
-    "주민등록등본",
-    "가족관계증명서",
-    "건강보험자격득실확인서",
-    "소득금액증명원",
-    "재직증명서",
+  totalViewers = 92,
+  rankings = [
+    { rank: "1등", score: 100 },
+    { rank: "2등", score: 97 },
+    { rank: "3등(나)", score: 96, isMe: true },
+    { rank: "4등", score: 92 },
+    { rank: "5등", score: 89 },
+    { rank: "6등", score: 80 },
+    { rank: "7등", score: 72 },
   ],
-}: BlueReportEligibleProps) {
+  requiredDocuments = [
+    "주민등록표등본",
+    "주민등록표초본",
+    "혼인관계증명서(상세)",
+    "인감증명서",
+    "신분증 및 인감도장",
+  ],
+}: BlueReportProps) {
   return (
-    <section className="w-full">
-      <h2 className="text-[28px] font-bold text-[#3A3B40]">나의 맞춤 리포트</h2>
-      <div className="mt-[20px] rounded-[12px] border border-[#F0F0FE] bg-white p-6">
-        {/* 신청 자격 상태 */}
-        <div className="flex items-center gap-2 mb-6">
-          <span className="inline-flex items-center justify-center rounded-full bg-[#E8F5E8] px-4 py-2 text-[16px] font-semibold text-[#22C55E]">
-            ✓ 신청 자격 있음
-          </span>
+    <div className="w-full overflow-hidden rounded-[24px] border border-[#E2E8F0] bg-white shadow-md">
+      <div className="px-10 py-20 sm:px-16">
+        <div className="mb-20 text-center text-[32px] font-bold tracking-tight text-[#333]">
+          <span className="text-[#5978FF] text-[32px]">{userName}</span> 님은
+          해당 청약{" "}
+          <span className="text-[#5978FF] text-[32px]">적격 대상자</span>{" "}
+          입니다!
         </div>
 
-        {/* 점수 및 순위 */}
-        <div className="grid grid-cols-2 gap-8 mb-8">
-          <div className="flex flex-col gap-4">
-            <div className="text-[20px] font-semibold text-[#595E69]">내 점수</div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-[56px] font-bold text-[#5978FF]">{score}</span>
-              <span className="text-[24px] text-[#84888E]">점</span>
+        <div className="mx-auto mb-24 flex w-full items-center justify-center border-gray-100">
+          <div className="flex w-full max-w-[1000px] items-center">
+            <div className="flex flex-1 flex-col items-center">
+              <span className="mb-5 text-[18px] font-semibold text-[#A1A5AD] tracking-widest">
+                나의 청약 점수
+              </span>
+              <span className="text-[100px] font-extrabold leading-none text-[#5978FF] tracking-tighter">
+                {score}
+              </span>
             </div>
-            <ScoreBar score={score} />
-          </div>
 
-          <div className="flex flex-col gap-4">
-            <div className="text-[20px] font-semibold text-[#595E69]">예상 순위</div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-[56px] font-bold text-[#5978FF]">{ranking}</span>
-              <span className="text-[24px] text-[#84888E]">위</span>
-              <span className="text-[16px] text-[#AAAFB5]">/ {totalApplicants}명 중</span>
+            <div className="h-32 w-[2px] bg-[#F1F3F5]"></div>
+            <div className="flex-[1.5] px-16 text-center">
+              <span className="mb-5 block text-[18px] font-semibold text-[#A1A5AD] tracking-widest">
+                나의 청약 점수 순위
+              </span>
+              <p className="text-[32px] font-medium text-[#4A4E57] leading-[1.4]">
+                나의 순위는 관심 리포트 열람 사용자 중 <br />
+                <span className="font-bold text-[#5978FF] text-[36px]">
+                  {ranking}위
+                </span>{" "}
+                입니다.
+              </p>
             </div>
           </div>
         </div>
 
-        {/* 구비 서류 */}
-        <DocumentCheckList documents={requiredDocuments} />
+        <div className="mb-24 flex flex-col items-center">
+          <p className="mb-12 text-[24px] font-bold text-[#333]">
+            나만의 분석 리포트 열람자는 {totalViewers}명입니다.
+          </p>
+          <div className="w-full max-w-[800px] space-y-2">
+            {rankings.map((item, idx) => (
+              <div
+                key={idx}
+                className={`flex h-[64px] items-center justify-between px-10 rounded-[14px] transition-all ${
+                  item.isMe
+                    ? "bg-[#C6D4FF] text-white"
+                    : "bg-transparent text-[#84888E]"
+                }`}
+              >
+                <span
+                  className={`text-[18px] ${
+                    item.isMe ? "font-bold" : "font-medium"
+                  }`}
+                >
+                  {item.rank}
+                </span>
+                <span
+                  className={`text-[24px] ${
+                    item.isMe ? "font-black" : "font-bold"
+                  }`}
+                >
+                  {item.score}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="text-center">
+          <p className="mb-12 text-[28px] font-bold text-[#333]">
+            청약 당첨을 대비해 아래의 서류들을 준비해주세요.
+          </p>
+
+          <div className="mx-auto w-full max-w-[1100px] space-y-4">
+            <div className="grid grid-cols-3 gap-5">
+              {requiredDocuments.slice(0, 3).map((doc, i) => (
+                <div
+                  key={i}
+                  className="flex h-[80px] items-center justify-center rounded-[16px] border border-[#E9ECEF] bg-white px-4 text-[20px] font-semibold text-[#84888E] shadow-sm"
+                >
+                  {doc}
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-center gap-5">
+              {requiredDocuments.slice(3, 5).map((doc, i) => (
+                <div
+                  key={i}
+                  className="flex h-[80px] w-full max-w-[350px] items-center justify-center rounded-[16px] border border-[#E9ECEF] bg-white px-4 text-[20px] font-semibold text-[#84888E] shadow-sm"
+                >
+                  {doc}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
-    </section>
+
+      <div className="flex h-[80px] items-center justify-center border-t border-[#F8F9FA] bg-[#FAFBFC]">
+        <button className="flex items-center gap-2 text-[18px] font-bold text-[#ADB5BD] hover:text-[#5978FF] transition-colors">
+          리포트 간단하게 보기
+          <svg
+            width="16"
+            height="10"
+            viewBox="0 0 10 6"
+            fill="none"
+            className="rotate-180"
+          >
+            <path
+              d="M1 1L5 5L9 1"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
   );
 }
