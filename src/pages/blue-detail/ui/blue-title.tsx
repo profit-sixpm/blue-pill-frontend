@@ -20,7 +20,7 @@ export function BlueTitle({
         <h1 className="text-[40px] font-bold leading-tight text-[#3A3B40]">
           {title}
         </h1>
-        <span className="shrink-0 inline-flex items-center justify-center rounded-full bg-[#FFF872] px-5 py-2 text-base font-semibold text-[#2D5BFF]">
+        <span className="shrink-0 inline-flex items-center justify-center rounded-[24px] bg-[#FFF872] px-5 py-2 text-base font-semibold text-[#2D5BFF]">
           {statusLabel}
         </span>
       </div>

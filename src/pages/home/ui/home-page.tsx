@@ -38,7 +38,7 @@ export const HomePage = () => {
         />
         {isSearching && (
           <div className="flex items-center gap-2 text-[#84888E]">
-            <div className="w-5 h-5 border-2 border-[#E9ECEF] border-t-[#5978FF] rounded-full animate-spin" />
+            <div className="w-5 h-5 border-2 border-[#E9ECEF] border-t-[#5978FF] rounded-[24px] animate-spin" />
             검색 중...
           </div>
         )}

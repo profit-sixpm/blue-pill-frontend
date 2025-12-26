@@ -40,7 +40,7 @@ export function BlueCard({ announcement, onClick }: BlueCardProps) {
           alt="카드 이미지"
         />
 
-        <div className="absolute left-[8px] top-[8px] inline-flex items-center justify-center rounded-full bg-[#FFF872] px-3 py-1 text-sm font-semibold text-[#2D5BFF] shadow-[0px_0px_4px_0px_#1B1B1B14]">
+        <div className="absolute left-[8px] top-[8px] inline-flex items-center justify-center rounded-[24px] bg-[#FFF872] px-3 py-1 text-sm font-semibold text-[#2D5BFF] shadow-[0px_0px_4px_0px_#1B1B1B14]">
           {receptionStatus}
         </div>
       </div>

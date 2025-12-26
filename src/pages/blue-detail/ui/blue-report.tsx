@@ -7,7 +7,7 @@ import { BlueReportIneligible } from "./blue-report-ineligible";
 function LoadingSpinner() {
   return (
     <div className="mt-[20px] h-[400px] rounded-[8px] border border-[#F0F0FE] bg-white p-6 flex flex-col items-center justify-center gap-4">
-      <div className="w-12 h-12 border-4 border-[#E9ECEF] border-t-[#5978FF] rounded-full animate-spin" />
+      <div className="w-12 h-12 border-4 border-[#E9ECEF] border-t-[#5978FF] rounded-[24px] animate-spin" />
       <p className="text-[18px] text-[#84888E]">리포트를 분석 중입니다...</p>
     </div>
   );
